@@ -1,0 +1,8 @@
+// KQL query that collects all the failed sign ins per UPN and renders it to a timechart.
+
+SigninLogs
+| where TimeGenerated >= ago(500d) // Filter by the last XX days
+| where UserPrincipalName =~ "user@domain.com" // Filter by UserPrincipalName
+| where ResultType == "70044"
+| summarize count() by bin(TimeGenerated, 1d) // Group and count by time interval (e.g., 1 day)
+| render timechart // Render the results as a timechart
