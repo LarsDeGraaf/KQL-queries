@@ -1,0 +1,8 @@
+AuditLogs
+| where TimeGenerated  > ago(90d)
+| where ActivityDisplayName == "Invite external user"
+| extend initiatedBy = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
+| extend InvitedUser = tostring(AdditionalDetails[5].value)
+| extend ActivityDateTime
+| order by ActivityDateTime desc 
+| project initiatedBy, InvitedUser, ActivityDateTime
