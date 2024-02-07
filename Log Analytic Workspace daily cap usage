@@ -1,9 +1,0 @@
-let DailyCapResetHour=21;
-Usage
-| where DataType !in ("Syslog", "SecurityAlert", "SecurityBaseline", "SecurityBaselineSummary", "SecurityDetection", "SecurityEvent", "WindowsFirewall", "MaliciousIPCommunication", "LinuxAuditLog", "SysmonEvent", "ProtectionStatus", "WindowsEvent")
-| where TimeGenerated > ago(32d)
-| extend StartTime=datetime_add("hour",-1*DailyCapResetHour,StartTime)
-| where StartTime > startofday(ago(31d))
-| where IsBillable
-| summarize IngestedGbBetweenDailyCapResets=sum(Quantity)/1000. by day=bin(StartTime , 1d) // Quantity in units of MB
-| render areachart
